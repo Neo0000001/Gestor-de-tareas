@@ -23,15 +23,8 @@ class TaskManager:
 
     def clear_screen(self):
         """
-        Inicializa el objeto TaskManager.
+        Funcion para limpiar la pantalla.
 
-        Este método crea un diccionario vacío llamado `tasks_dictionary` para almacenar las tareas.
-
-        Parámetros:
-            Ninguno
-
-        Retorna:
-            Ninguno
         """
 
         if os.name == 'nt':  # Verificar si estamos en Windows
