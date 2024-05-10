@@ -8,23 +8,35 @@ import json
 class TaskManager:
     def __init__(self):
         """
-        Inicializa el objeto TaskManager.
+        Inicializa el objeto TaskManager con un diccionario vacío para almacenar las tareas.
 
-        Este método crea un diccionario vacío llamado `tasks_dictionary` para almacenar las tareas.
+        Este método se ejecuta al crear una instancia de la clase TaskManager. Inicializa un atributo de instancia llamado `tasks_dictionary` como un diccionario vacío.
+        Este diccionario se utilizará para almacenar las tareas agregadas al gestor de tareas.
 
         Parámetros:
             Ninguno
 
-        Retorna:
-            Ninguno
+        Returns:
+            None
         """
 
         self.tasks_dictionary = dict()
 
     def clear_screen(self):
         """
-        Funcion para limpiar la pantalla.
+        Limpia la pantalla de la consola en función del sistema operativo en uso. 
 
+        Si el sistema operativo es Windows, utiliza el comando 'cls' para limpiar la pantalla.
+        En caso de que el sistema operativo sea Unix/Linux, utiliza el comando 'clear'.
+
+        Parámetros
+        ----------
+        self : clase
+            La instancia de la clase a la que pertenece el método
+
+        Returns
+        -------
+        None
         """
 
         if os.name == 'nt':  # Verificar si estamos en Windows
@@ -34,32 +46,50 @@ class TaskManager:
 
     def list_tasks(self):
         """
-        Un método que lista todas las tareas, imprime sus nombres y estados, y solicita al usuario que presione ENTER para regresar al menú.
+        Muestra un listado de todas las tareas junto con su estado, e imprime el resultado en la consola.
+
+        El método recorre el diccionario de tareas y muestra una tabla con los nombres de las tareas y sus estados (completadas o pendientes).
+        Los colores se usan para resaltar la información y mejorar la legibilidad.
+
+        Parámetros
+        ----------
+        self : clase
+            La instancia de la clase a la que pertenece el método
+
+        Returns
+        -------
+        None
         """
 
-        contador = 0
+        contador = 0  # Inicializa un contador para numerar las tareas
 
         print(AMARILLO + '\nListado de Tareas:\n')
         print(BLANCO + 'Nombre de la tarea'.ljust(25), 'Estado de la tarea')
         print(ROJO + '-' * 50)
+
+        # Recorre las tareas en el diccionario de tareas
         for task_name, state in self.tasks_dictionary.items():
             contador += 1
             print(
                 f"{ROJO}{contador}. {BLANCO}{task_name.ljust(25)} {ROJO + 'Pendiente' if state == False else VERDE + 'Completada' + BLANCO}")
 
-        input(f'\n{BLANCO}Pulsa {AMARILLO}"ENTER"{BLANCO} para regresar al menu... ')
+        input(f'\n{BLANCO}Pulsa {AMARILLO}"ENTER"{
+              BLANCO} para regresar al menu... ')
 
         self.save_to_file()  # Guardar en el archivo después de mostrar las tareas
 
     def create_task(self):
         """
-        Crea una nueva tarea con el nombre dado y la agrega al diccionario de tareas.
+        Permite al usuario crear una nueva tarea y agregarla al diccionario de tareas del objeto TaskManager.
+
+        El método solicita al usuario que ingrese un nombre para la nueva tarea y la agrega al diccionario de tareas con un estado inicial 'False' (pendiente).
+        Después, se muestra un mensaje de confirmación y se actualiza el archivo con la tarea recién agregada.
 
         Parámetros:
-            self (TaskManager): El objeto TaskManager.
+            self (TaskManager): La instancia del objeto TaskManager a la que se agregará la nueva tarea.
 
-        Retorna:
-            Ninguno
+        Returns:
+            None
         """
 
         task_name = input(BLANCO +
@@ -89,14 +119,14 @@ class TaskManager:
         print(BLANCO + '\nEste es un listado de todas las tareas pendientes')
         print(ROJO + '-' * 49)
 
-        contador = 0
+        contador = 0  # Inicializa un contador para numerar las tareas pendientes
 
-        for clave, valor in self.tasks_dictionary.items():
-            if valor == False:
-                contador += 1
+        for clave, valor in self.tasks_dictionary.items():  # Recorre las tareas en el diccionario de tareas
+            if valor == False:  # Si la tarea está pendiente
+                contador += 1  # Incrementa el contador de tareas pendientes
                 print(ROJO + str(contador) + '.' + BLANCO, clave)
 
-        if contador == 0:
+        if contador == 0:  # Si no hay tareas pendientes
             print(
                 BLANCO + '\nNo hay ningura tarea pendiente para marcar como' + VERDE + ' completada.\n')
             input(
@@ -113,7 +143,8 @@ class TaskManager:
         elif task_name == '':
             main(task_manager)
         else:
-            print(f'\n{BLANCO}La tarea {AMARILLO + task_name + BLANCO} no existe.')
+            print(f'\n{BLANCO}La tarea {
+                  AMARILLO + task_name + BLANCO} no existe.')
 
         input(f'\nPulse {AMARILLO}"ENTER"{BLANCO} para regresar al menu... ')
 
@@ -134,7 +165,7 @@ class TaskManager:
             Ninguno
         """
 
-        contador = 0
+        contador = 0  # Inicializa un contador para enumerar las tareas
 
         print(AMARILLO + '\nListado de Tareas:\n')
         print(BLANCO + 'Nombre de la tarea'.ljust(25), 'Estado de la tarea')
@@ -153,6 +184,7 @@ class TaskManager:
             print(
                 f"\n{BLANCO}Tarea {AMARILLO + task_name + BLANCO} eliminada correctamente.")
         elif task_name == '':
+            # Si el usuario presiona Enter, vuelve al Menú Principal
             main(task_manager)
 
         else:
@@ -164,7 +196,15 @@ class TaskManager:
 
     def save_to_file(self):
         """
-        Guarda el contenido del diccionario tasks_dictionary en un archivo JSON llamado "data.json".
+        Guarda el diccionario de tareas (`tasks_dictionary`) del objeto TaskManager en un archivo JSON llamado "data.json".
+
+        Este método serializa el diccionario de tareas como JSON y lo almacena en el archivo "data.json". Cualquier actualización realizada en el diccionario de tareas se reflejará en el archivo JSON después de llamar a este método.
+
+        Parámetros:
+            self (TaskManager): La instancia del objeto TaskManager cuyas tareas se guardarán en el archivo JSON.
+
+        Returns:
+            None
         """
 
         with open("data.json", "w") as file:
@@ -215,6 +255,7 @@ def main(task_manager):
         print(AMARILLO + '\nMENU PRINCIPAL')
         print(ROJO + '-' * 14)
         print('\n')
+        # Muestra las opciones del menú con sus respectivos números de opción
         print(ROJO + '[1]' + AZUL + ' Crear una tarea nueva.')
         print(ROJO + '[2]' + AZUL + ' Listar todas las tareas.')
         print(ROJO + '[3]' + AZUL + ' Marcar una tarea como completada.')
@@ -224,10 +265,12 @@ def main(task_manager):
         option = input(BLANCO
                        + '\nSelecciona una opción: ' + AMARILLO)
 
+        # Verifica que la opción seleccionada esté dentro del rango de opciones válidas
         while option not in ['1', '2', '3', '4', '5']:
             print(VERDE + '\nOpción no válida. Selecciona una opción del menú.')
             option = input(BLANCO + '\nSelecciona una opción: ' + AMARILLO)
 
+        # Ejecuta la acción correspondiente según la opción seleccionada por el usuario
         if option == '1':
             task_manager.create_task()
         elif option == '2':
@@ -276,7 +319,7 @@ try:
         input(
             f'Fichero creado correctamente, pulse {AMARILLO} "ENTER" {BLANCO} para continuar... ')
 except Exception as e:
-    print(f"Error al cargar el archivo: {e}")
+    print(f'Error al cargar el archivo: {e}')
 
 
 if __name__ == '__main__':
